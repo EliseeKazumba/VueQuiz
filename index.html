@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+     <link rel="stylesheet" href="main.css">
+
+
+    <title>Vue Calculator App</title>
+  </head>
+  <body>
+
+          <div class="jumbotron text-center" id="firstNav">
+              <h1>Vue Quiz App</h1>
+              <p>Welcome to the quiz you will NEVER pass</p> 
+            </div>
+              
+            <div class="container" id="threeColumns">
+              <div class="row">
+                <div class="col-sm-4">
+                  <h3>Instruction 1</h3>
+                  <p> DO NOT USE GOOGLE!!!</p>
+                  <p>These Questions are the hardest questions of all time. Simple no?</p>
+                </div>
+                <div class="col-sm-4">
+                  <h3>Instruction 2</h3>
+                  <p>Answer Multiple choice questions</p>
+                  <p>Atleast your wrong answer will come fast....it does save time</p>
+                </div>
+                <div class="col-sm-4">
+                  <h3>Instruction 3</h3>        
+                  <p>Do not randomly guess.</p>
+                  <p> Makes it even more embarrassing</p>
+                </div>
+        </div>
+</div>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+        <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+          <div id="app">
+              <h1>{{ quiz.title }}</h1>
+              <!-- index is used to check with current question index -->
+              <div v-for="(question, index) in quiz.questions">
+                <!-- Hide all questions, show only the one with index === to current question index -->
+                <div v-show="index === questionIndex">
+                  <h2>{{ question.text }}</h2>
+                  <ol>
+                    <li v-for="response in question.responses">
+                      <label>
+                       
+                        <input type="radio" 
+                               v-bind:value="response.correct" 
+                               v-bind:name="index" 
+                               v-model="userResponses[index]"> {{response.text}}
+                      </label>
+                    </li>
+                  </ol>
+                  <!-- The two navigation buttons -->
+                  <!-- Note: prev is hidden on first question -->
+                  <button v-if="questionIndex > 0" v-on:click="prev">
+                    prev
+                  </button>
+                  <button v-on:click="next">
+                    next
+                  </button>
+                </div>
+              </div>
+              <div v-show="questionIndex === quiz.questions.length">
+                <h2>
+                Quiz finished
+              </h2>
+                <p>
+                  Total score: {{ score() }} / {{ quiz.questions.length }}
+                </p>
+              </div>
+            </div>
+
+                <script>
+                  
+                  // Create a quiz object with a title and two questions.
+                      // A question has one or more answer, and one or more is valid.
+                      var quiz = {
+                        title: 'Quiz',
+                        // this below is an array containing all of the questions and answers the quiz will contain
+
+                        questions: [
+                          {
+                            text: "Who is the father of Geometry?",
+                            responses: [
+                              {text: 'Aristotle'}, 
+                              {text: 'Euclid', correct: true}, 
+                            ]
+                          }, {
+                            text: "Grand Central Terminal, Park Avenue, New York is the world's?",
+                            responses: [
+                              {text: 'largest railway station', correct: true}, 
+                              {text: 'highest railway station'}, 
+                            ]
+                          } 
+                        ]
+                      };
+                            
+                      new Vue({
+                        el: '#app',
+                        data: {
+                          quiz: quiz,
+                          // Store current question index
+                          questionIndex: 0,
+                          // An array initialized with "false" values for each question
+                          // It means: "did the user answered correctly to the question n?" "no".
+                          userResponses: Array(quiz.questions.length).fill(false)
+                        },
+                        // The view will trigger these methods on click
+                        methods: {
+                          // Go to next question
+                          next: function() {
+                            this.questionIndex++;
+                          },
+                          // Go to previous question
+                          prev: function() {
+                            this.questionIndex--;
+                          },
+                          // Return "true" count in userResponses
+                          score: function() {
+                            return this.userResponses.filter(function(val) { return val }).length;
+                          }
+                        }
+                      });
+
+                </script>
+
+
+
+  </body>
+</html>
